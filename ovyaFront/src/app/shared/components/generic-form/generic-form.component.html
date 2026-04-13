@@ -1,0 +1,85 @@
+<form [formGroup]="form" (ngSubmit)="onSubmit()" class="generic-form">
+  <div class="form-fields-grid">
+    <ng-container *ngFor="let field of fields">
+      
+      <!-- Champ Autocomplete -->
+      <mat-form-field *ngIf="field.type === 'autocomplete'" appearance="outline" class="field-item">
+        <mat-label>{{ field.label }}</mat-label>
+        <input type="text"
+               matInput
+               [formControlName]="field.key"
+               [matAutocomplete]="auto"
+               #trigger="matAutocompleteTrigger"
+               (focus)="trigger.openPanel()"
+               [placeholder]="field.placeholder || ''">
+        <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn(field)">
+          <mat-option *ngFor="let option of autocompleteOptions[field.key] | async" [value]="option">
+            {{ field.autocompleteConfig?.displayFn(option) }}
+          </mat-option>
+        </mat-autocomplete>
+        <mat-error *ngIf="getControl(field.key).errors?.['required']">
+          {{ field.label }} est obligatoire
+        </mat-error>
+      </mat-form-field>
+
+      <!-- Champ Date Simple -->
+      <mat-form-field *ngIf="field.type === 'date'" appearance="outline" class="field-item">
+        <mat-label>{{ field.label }}</mat-label>
+        <input matInput
+               [matDatepicker]="picker"
+               [formControlName]="field.key"
+               (click)="picker.open()"
+               readonly>
+        <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+        <mat-error *ngIf="getControl(field.key).errors?.['required']">
+          {{ field.label }} est obligatoire
+        </mat-error>
+      </mat-form-field>
+
+      <!-- Champ Date & Heure (Material styled native picker) -->
+      <mat-form-field *ngIf="field.type === 'datetime-local'" appearance="outline" class="field-item">
+        <mat-label>{{ field.label }}</mat-label>
+        <input matInput
+               type="datetime-local"
+               [formControlName]="field.key"
+               (click)="$any($event.target).showPicker()"
+               (focus)="$any($event.target).showPicker()">
+        <mat-icon matIconSuffix>calendar_today</mat-icon>
+        <mat-error *ngIf="getControl(field.key).errors?.['required']">
+          {{ field.label }} est obligatoire
+        </mat-error>
+      </mat-form-field>
+
+      <!-- Champ Texte / Nombre -->
+      <mat-form-field *ngIf="field.type === 'text' || field.type === 'number'" appearance="outline" class="field-item">
+        <mat-label>{{ field.label }}</mat-label>
+        <input [type]="field.type"
+               matInput
+               [formControlName]="field.key"
+               [placeholder]="field.placeholder || ''">
+        <mat-error *ngIf="getControl(field.key).errors?.['required']">
+          {{ field.label }} est obligatoire
+        </mat-error>
+      </mat-form-field>
+
+      <!-- Champ Boolean (Checkbox) -->
+      <div *ngIf="field.type === 'boolean'" class="field-item checkbox-container">
+        <mat-checkbox [formControlName]="field.key">
+          {{ field.label }}
+        </mat-checkbox>
+      </div>
+
+    </ng-container>
+  </div>
+
+  <div class="form-actions">
+    <button mat-button type="button" (click)="onCancel()" *ngIf="formCancel.observed">
+      Annuler
+    </button>
+    <button mat-raised-button color="primary" type="submit" [disabled]="form.invalid || isLoading">
+      <span *ngIf="!isLoading">{{ submitLabel }}</span>
+      <span *ngIf="isLoading">Chargement...</span>
+    </button>
+  </div>
+</form>

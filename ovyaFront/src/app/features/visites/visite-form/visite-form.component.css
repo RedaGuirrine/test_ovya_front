@@ -1,0 +1,19 @@
+.header-container {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+h2 {
+  margin: 0;
+  color: #333;
+}
+
+.checkbox-container {
+  margin-bottom: 1.5rem;
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+}

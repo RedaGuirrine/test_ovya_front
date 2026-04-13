@@ -1,0 +1,9 @@
+<div class="form-container">
+  <h3>Nouvelle Visite</h3>
+  <app-generic-form
+    [fields]="formFields"
+    submitLabel="Enregistrer la visite"
+    [isLoading]="isLoading"
+    (formSubmit)="onFormSubmit($event)">
+  </app-generic-form>
+</div>

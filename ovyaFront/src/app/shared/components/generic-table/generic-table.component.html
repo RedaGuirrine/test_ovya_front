@@ -1,0 +1,122 @@
+<mat-card>
+  <mat-card-header>
+    <mat-card-title>{{ title }}</mat-card-title>
+  </mat-card-header>
+
+  <mat-card-content style="position: relative;">
+    <!-- Chargement Overlay -->
+    <div *ngIf="isLoading" class="loading-overlay">
+      <div class="spinner-container">
+        <span class="loading-text">Chargement...</span>
+      </div>
+    </div>
+
+    <div class="table-wrapper" [class.is-loading-content]="isLoading">
+        <table mat-table [dataSource]="dataSource" class="generic-table">
+
+          <!-- Colonnes dynamiques -->
+          <ng-container *ngFor="let col of columns" [matColumnDef]="col.key">
+            <th mat-header-cell *matHeaderCellDef> {{ col.header }} </th>
+            <td mat-cell *matCellDef="let element">
+              <!-- Boolean avec badge -->
+              <ng-container *ngIf="isBooleanColumn(col); else normalCell">
+                <span class="badge"
+                      [class.badge-success]="getBooleanValue(element, col)"
+                      [class.badge-danger]="!getBooleanValue(element, col)">
+                  {{ getCellValue(element, col) }}
+                </span>
+              </ng-container>
+              <!-- Cellule normale -->
+              <ng-template #normalCell>
+                {{ getCellValue(element, col) }}
+              </ng-template>
+            </td>
+          </ng-container>
+
+          <ng-container *ngFor="let col of columns" [matColumnDef]="'filter_' + col.key">
+            <th mat-header-cell *matHeaderCellDef>
+              <div class="filter-cell-container" *ngIf="isFilterable(col)">
+                <mat-form-field appearance="outline" class="filter-field">
+                  <ng-container [ngSwitch]="col.type">
+                    <!-- Cas Boolean: Select -->
+                    <mat-select *ngSwitchCase="'boolean'" 
+                                [(ngModel)]="columnFilters[col.key]" 
+                                (selectionChange)="applyFilters()"
+                                placeholder="Tout">
+                      <mat-option [value]="''">Tout</mat-option>
+                      <mat-option [value]="'true'">{{ col.trueLabel || 'Oui' }}</mat-option>
+                      <mat-option [value]="'false'">{{ col.falseLabel || 'Non' }}</mat-option>
+                    </mat-select>
+
+                    <!-- Cas Date: Input type Date -->
+                    <input *ngSwitchCase="'date'" 
+                           matInput type="date"
+                           [(ngModel)]="columnFilters[col.key]"
+                           (ngModelChange)="applyFilters()">
+
+                    <!-- Cas Number: Input type Number -->
+                    <input *ngSwitchCase="'number'" 
+                           matInput type="number"
+                           [(ngModel)]="columnFilters[col.key]"
+                           (ngModelChange)="applyFilters()"
+                           placeholder="N°">
+
+                    <!-- Cas par défaut (Text, Nested): Input type Text -->
+                    <input *ngSwitchDefault 
+                           matInput type="text"
+                           [(ngModel)]="columnFilters[col.key]"
+                           (ngModelChange)="applyFilters()"
+                           [placeholder]="'Filtrer...'">
+                  </ng-container>
+                </mat-form-field>
+
+                <button mat-icon-button type="button" class="sort-button" 
+                        (click)="toggleSort(col.key)" 
+                        [color]="currentSort.key === col.key ? 'primary' : ''"
+                        [title]="'Trier par ' + col.header">
+                  <mat-icon>{{ getSortIcon(col.key) }}</mat-icon>
+                </button>
+              </div>
+            </th>
+          </ng-container>
+
+          <!-- Colonne Actions -->
+          <ng-container matColumnDef="actions" *ngIf="showActions">
+            <th mat-header-cell *matHeaderCellDef> Actions </th>
+            <td mat-cell *matCellDef="let element">
+              <button mat-icon-button type="button" color="warn" (click)="onDelete(element)" aria-label="Supprimer">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </td>
+          </ng-container>
+
+          <!-- Filtre vide pour la colonne actions -->
+          <ng-container matColumnDef="filter_actions" *ngIf="showActions">
+            <th mat-header-cell *matHeaderCellDef></th>
+          </ng-container>
+
+          <!-- Ligne d'en-tête -->
+          <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+          <!-- Ligne de filtres -->
+          <tr mat-header-row *matHeaderRowDef="filterColumns; sticky: true" class="filter-row"></tr>
+          <!-- Lignes de données -->
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+          <!-- Ligne vide -->
+          <tr class="mat-row" *matNoDataRow>
+            <td class="mat-cell empty-state" [attr.colspan]="displayedColumns.length">
+              {{ emptyMessage }}
+            </td>
+          </tr>
+        </table>
+      </div>
+
+      <mat-paginator
+        [length]="totalElements"
+        [pageSize]="pageSize"
+        [pageSizeOptions]="pageSizeOptions"
+        (page)="onPageChanged($event)"
+        aria-label="Pagination">
+      </mat-paginator>
+  </mat-card-content>
+</mat-card>

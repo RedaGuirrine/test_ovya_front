@@ -1,0 +1,48 @@
+/* GENERIC TABLE STYLES */
+.table-wrapper {
+  overflow-x: auto;
+  position: relative;
+  min-height: 200px;
+}
+
+.generic-table {
+  width: 100%;
+}
+
+.filter-cell-container {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.filter-field {
+  flex: 1;
+  font-size: 0.85rem;
+}
+
+.sort-button {
+  width: 32px;
+  height: 32px;
+  line-height: 32px;
+}
+
+.sort-button .mat-icon {
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+}
+
+.filter-field .mat-mdc-form-field-infix {
+  padding-top: 4px;
+  padding-bottom: 4px;
+  min-height: unset;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 3rem;
+  color: #666;
+  font-size: 1.1rem;
+}
+
+/* Note: .loading-overlay, .badge etc. are now global in src/styles.css */

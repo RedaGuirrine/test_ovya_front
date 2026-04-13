@@ -1,0 +1,26 @@
+<div class="page-container">
+  <!-- Formulaire de création -->
+  <div class="section-spacing">
+    <mat-card>
+      <mat-card-content>
+        <app-visite-form (visiteCreated)="loadVisites()"></app-visite-form>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <!-- Liste générique -->
+  <app-generic-table
+    title="Liste des visites"
+    [columns]="columns"
+    [data]="data()"
+    [totalElements]="totalElements()"
+    [pageSize]="pageSize()"
+    [isLoading]="isLoading()"
+    [showActions]="true"
+    emptyMessage="Aucune visite trouvée. Utilisez le formulaire ci-dessus pour en ajouter une."
+    (pageChange)="onPageChange($event)"
+    (filterChange)="onFilterChange($event)"
+    (sortChange)="onSortChange($event)"
+    (deleteItem)="onDelete($event)">
+  </app-generic-table>
+</div>
