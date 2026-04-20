@@ -57,3 +57,25 @@ Angular CLI does not come with an end-to-end testing framework by default. You c
 ## Additional Resources
 
 For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+
+## Démarrer le projet complet (Backend & Frontend) sur UNIX (Linux/macOS)
+
+### 1. Démarrer le Backend (Spring Boot)
+Depuis un terminal, naviguez vers le dossier backend et utilisez le wrapper Gradle :
+
+```bash
+cd test_ovya_back/ovya_back
+chmod +x gradlew
+./gradlew bootRun
+```
+*Le backend démarrera sur `http://localhost:8080`. Assurez-vous que votre instance PostgreSQL est bien démarrée.*
+
+### 2. Démarrer le Frontend (Angular)
+Depuis un autre terminal, naviguez vers le dossier frontend pour l'exécuter :
+
+```bash
+cd test_ovya_front/ovyaFront
+npm install
+npm start
+```
+*L'application sera accessible depuis votre navigateur à l'adresse `http://localhost:4200`.*
