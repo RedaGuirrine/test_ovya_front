@@ -22,4 +22,24 @@ export class CcialService {
       map(page => page.content || [])
     );
   }
+
+  getCcials(page: number, size: number, sort: string, filters: any): Observable<Page<Ccial>> {
+    let params = new HttpParams()
+      .set('page', page.toString())
+      .set('size', size.toString())
+      .set('sort', sort);
+
+    if (filters.nom) params = params.set('nom', filters.nom);
+    if (filters.email) params = params.set('email', filters.email);
+
+    return this.http.get<Page<Ccial>>(this.apiUrl, { params });
+  }
+
+  createCcial(ccial: Ccial): Observable<Ccial> {
+    return this.http.post<Ccial>(this.apiUrl, ccial);
+  }
+
+  deleteCcial(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/${id}`);
+  }
 }

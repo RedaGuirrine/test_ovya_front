@@ -22,4 +22,25 @@ export class DossierService {
       map((page: { content: Dossier[] }) => page.content || [])
     );
   }
+
+  getDossiers(page: number, size: number, sort: string, filters: any): Observable<any> {
+    let params = new HttpParams()
+      .set('page', page.toString())
+      .set('size', size.toString())
+      .set('sort', sort);
+
+    if (filters.searchId) params = params.set('searchId', filters.searchId);
+    if (filters.dateFrom) params = params.set('dateFrom', filters.dateFrom);
+    if (filters.dateTo) params = params.set('dateTo', filters.dateTo);
+
+    return this.http.get<any>(this.apiUrl, { params });
+  }
+
+  createDossier(dossier: Dossier): Observable<Dossier> {
+    return this.http.post<Dossier>(this.apiUrl, dossier);
+  }
+
+  deleteDossier(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/${id}`);
+  }
 }

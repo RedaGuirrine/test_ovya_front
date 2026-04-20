@@ -3,6 +3,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Visite } from '../models/visite.model';
 import { Page } from '../models/page.model';
+import { CcialVisiteCount } from '../models/ccial-visite-count.model';
 import { environment } from '../../../environments/environment';
 
 @Injectable({
@@ -37,4 +38,9 @@ export class VisiteService {
   deleteVisite(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
+
+  getCcialsSurcharges(): Observable<CcialVisiteCount[]> {
+    return this.http.get<CcialVisiteCount[]>(`${this.apiUrl}/ccials-surcharges`);
+  }
 }
+
