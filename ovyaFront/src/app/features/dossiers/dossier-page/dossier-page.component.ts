@@ -109,9 +109,9 @@ export class DossierPageComponent implements OnInit {
 
   onCreate(val: any): void {
     this.isSaving.set(true);
-    const dossierData = {
+    const dossierData: any = {
       dateInsert: new Date().toISOString(),
-      ccial: val.ccial // L'objet commercial complet passée par l'autocomplete
+      ccial: val.ccial?.id ? { id: val.ccial.id } : undefined // Envoi uniquement de l'ID
     };
     
     this.dossierService.createDossier(dossierData).subscribe({

@@ -115,9 +115,9 @@ export class VisiteFormComponent implements OnInit {
     const visite: Visite = {
       dateStart: new Date(formValue.dateStart).toISOString(),
       dateEnd: new Date(formValue.dateEnd).toISOString(),
-      acq: formValue.acq,
-      ccial: formValue.ccial,
-      dossier: formValue.dossier,
+      acq: formValue.acq?.id ? { id: formValue.acq.id } as any : undefined,
+      ccial: formValue.ccial?.id ? { id: formValue.ccial.id } as any : undefined,
+      dossier: formValue.dossier?.id ? { id: formValue.dossier.id } as any : undefined,
       canceled: !!formValue.canceled
     };
 
